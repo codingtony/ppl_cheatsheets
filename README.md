@@ -3,4 +3,4 @@
 Open Source SVGs to help future pilots to get their PPL and become better pilots
 
 ## Circuits
-![](http://codingtony.com/ppl_cheatsheets/Circuit_24L_CYHU.svg)
+[Circuit 24L at CYHU](http://codingtony.com/ppl_cheatsheets/Circuit_24L_CYHU.svg)
