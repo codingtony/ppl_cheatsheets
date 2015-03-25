@@ -12,7 +12,7 @@
    height="8.5in"
    width="11in"
    version="1.2"
-   inkscape:version="0.91 r"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="Circuit_24L_CYHU.svg">
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -24,14 +24,14 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1025"
+     inkscape:window-height="1018"
      id="namedview175"
      showgrid="false"
      inkscape:zoom="0.87256052"
-     inkscape:cx="100.57755"
+     inkscape:cx="596.46752"
      inkscape:cy="397.39331"
-     inkscape:window-x="-3"
-     inkscape:window-y="-3"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <title
@@ -898,7 +898,7 @@
            x="10.314453"
            y="1005.6507"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:125%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start"
-           id="tspan3613">If below 500 ft : Slight turn, try to land on runway 28 or aim for the Highway 116</tspan><tspan
+           id="tspan3613">If below 500ft AGL : Slight turn, try to land on runway 28 or aim for the Highway 116</tspan><tspan
            dx="0"
            x="472.94141"
            y="1005.6507"
@@ -911,7 +911,7 @@
            x="10.314453"
            y="1024.4008"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:125%;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start"
-           id="tspan3619">If above 1000ft : Turn 180 deg to come back and land on 06R or 06L</tspan><tspan
+           id="tspan3619">If above 1000ft AGL : Turn 180 deg to come back and land on 06R or 06L</tspan><tspan
            dx="0"
            x="465.00195"
            y="1024.4008"
