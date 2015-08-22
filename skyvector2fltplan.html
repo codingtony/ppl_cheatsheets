@@ -1,0 +1,31 @@
+<html>
+<head>
+	<div>
+		<textarea id="skyvector" rows=10 cols=100></textarea>
+	</div>
+	
+	<label id="fltplan"></label>
+</head>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#fltplan").text("test");
+	$("#skyvector").on('input',function(e) {
+		var sk = this.value;
+		var coord = sk.split(" ").map(function (o) { return o.trim()}).filter(function (o) { return o != "" } );
+		var gps= /\d\d\d\d*[NS]\d\d\d\d\d\d*[EW]/;
+		var rgps= /(\d\d\d\d)\d*([NS])(\d\d\d\d\d)\d*([EW])/;
+		coord = coord.map(function(o) {
+			if (gps.test(o)) {
+				return o.replace(rgps,"$1$2/$3$4");
+			} else {
+				return o;
+			}
+		});
+
+		$("#fltplan").text(coord.join(' '));
+	});
+});
+</script>
+</html>
+
