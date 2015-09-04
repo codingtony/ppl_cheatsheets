@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v=VML>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" /><title>GPS-20150904_1832</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Tracks - Generated with BT747 V2.1.3 http://www.bt747.org - powered by Google Maps" />
+
+<script src="http://maps.googleapis.com/maps/api/js?v=3.14&sensor=false&libraries=geometry" type="text/javascript">
+</script>
+<style type="text/css">
+ html, body, #map
+  {
+   width: 100%;
+   height: 100%;
+  }
+ body {
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-left: 0px;
+  margin-bottom: 0px;
+ }
+
+</style>
+</head>
+
+<body  onresize="setFooter()">
+<div id="map"> </div>
+<div id="footer">
+
+<form style="display:inline" action="javascript:gotoAddr()">
+<input type="submit" value="Go To" />
+<input type="submit" value="" style="display:none" />
+<input size="30" type="text" name="adr" id="adr" />
+</form>
+<input type="submit" value="Init" onclick="initial()"/><span id="latlon">Click on map to get position.  </span>Tracks: 
+<script type="text/javascript">
+ geocoder = new google.maps.Geocoder();
+ preva = "none";
+function getBoundsZoomLevel(bounds, mapDim) {
+  var WORLD_DIM = { height: 256, width: 256 };
+  var ZOOM_MAX = 21;
+  function latRad(lat) {
+     var sin = Math.sin(lat * Math.PI / 180);
+    var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+    return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+  }
+  function zoom(mapPx, worldPx, fraction) {
+    return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+  }
+  var ne = bounds.getNorthEast();
+  var sw = bounds.getSouthWest();
+  var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+  var lngDiff = ne.lng() - sw.lng();
+  var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+  var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+  var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+  return Math.min(latZoom, lngZoom, ZOOM_MAX);
+}
+ function openInfoWindow(map,latlng,txt){
+   var infowindow = new google.maps.InfoWindow({content: txt});
+   var marker = new google.maps.Marker({
+   position: latlng,map: map});   infowindow.open(map,marker);}
+ function showaddr(latlng) {
+  if (latlng) {
+   geocoder.geocode({'latLng':latlng}, function(result,status) {
+    if(status===google.maps.GeocoderStatus.OK) {
+     adr=result[0];
+     var txt=adr.formatted_address;
+     if(txt==preva) {
+      openInfoWindow(map,latlng, txt);
+     } else {
+      preva = txt;
+     }
+    }
+   });
+  }
+ }
+function latlonTxt(latlon) {
+ if(latlon) {
+  var s='<b>Last click: '+ latlon.toUrlValue()+' </b>';
+  showaddr(latlon);  document.getElementById("latlon").innerHTML = s;
+ }
+}
+function latlonFunc() {
+ return function(overlay,latlon) {latlonTxt(latlon.latLng);}
+}
+function gotoPt(result,status) {
+ if(status!==google.maps.GeocoderStatus.OK){
+  document.getElementById("latlon").innerHTML="Location not found";
+ } else {
+  map.setCenter(result[0].geometry.location);latlonTxt(result[0].geometry.location);
+ }
+}
+
+function gotoAddr(){
+ var ad=document.getElementById("adr").value;
+ new google.maps.Geocoder().geocode({'address':ad},gotoPt);
+}
+function makeOpenerCaller(i) { return function() { showMarkerInfo(i); };}
+function showMarkerInfo(i) {
+ markers[i].openInfoWindow(infoHtmls[i]);
+}
+function getWindowHeight() {
+ var windowHeight=0;
+ if (typeof(window.innerHeight)=='number') {
+  windowHeight=window.innerHeight;
+ } else {
+  if (document.documentElement&&document.documentElement.clientHeight) {
+  windowHeight = document.documentElement.clientHeight;
+  } else {
+   if (document.body&&document.body.clientHeight) {
+    windowHeight=document.body.clientHeight;
+   }
+  }
+ }
+ return windowHeight;
+}
+function setFooter() {
+ if (document.getElementById) {
+  var windowHeight=getWindowHeight();
+  var footerElement=document.getElementById('footer');
+  var footerHeight=footerElement.offsetHeight;
+   document.getElementById('map').style.height=
+    (windowHeight-footerHeight)+'px';
+ }
+}
+function trackClick(trk,val) {
+ if (val == 1) {
+  trk.setMap(map);
+ } else {
+  trk.setMap(null);
+ } }
+function makeLatLonInfo(h) {
+ return function(latlng) {
+  latlonTxt(latlng.latLng);
+  openInfoWindow(map,latlng.latLng, h);
+ };
+} var clickStr; clickStr=""; function clickString() {
+  document.write(clickStr);
+ }
+ var mapTypeIds=['OSM',google.maps.MapTypeId.ROADMAP,google.maps.MapTypeId.SATELLITE,google.maps.MapTypeId.HYBRID,google.maps.MapTypeId.TERRAIN];
+ var map=new google.maps.Map(   document.getElementById("map"),  {
+    center:new google.maps.LatLng(0,0)
+    ,mapTypeControl: true
+    ,mapTypeControlOptions: {mapTypeIds:mapTypeIds}    ,scaleControl:true
+    ,overviewMapControl:true
+    ,rotateControl:true
+    ,panControl:true
+    ,streetViewControl:true
+    ,zoomControl:true
+    ,mapTypeIds:mapTypeIds  });
+map.mapTypes.set('OSM', new google.maps.ImageMapType({    getTileUrl: function(coord, zoom) {        return 'http://tile.openstreetmap.org/' + zoom + '/' + coord.x + '/' + coord.y + '.png';    },    tileSize: new google.maps.Size(256, 256),    name: 'OpenStreetMap',    maxZoom: 19}));var track0=new google.maps.Polyline({strokeColor:"#0000FF",
+  strokeWeight: 4,
+  strokeOpacity: 0.8,geodesic:true,path:google.maps.geometry.encoding.decodePath("qo`vGd|d`M")});
+track0.setMap(map);google.maps.event.addListener(track0,'click',makeLatLonInfo("<b>Track span</b><br/><br/><b>#1# </b>04-SEP-15 18:32:50"));
+var track1=new google.maps.Polyline({strokeColor:"#0000FF",
+  strokeWeight: 4,
+  strokeOpacity: 0.8,geodesic:true,path:google.maps.geometry.encoding.decodePath("qo`vGd|d`MfAhAi@WIAU?HDCJHmBF?@@C@BCE@CAH@BH?bADDN@C@XFDHBLOdBuDrm@O~AKl@@h@@@FEBKBC@K@@AIEBCP?LBNFFNFRBLCJIFOBUvCye@bA{LbB{PxAkNtDgZrBaQn@cG|AsLhBqLrF_\\fAuF~AuH|B{J\\kAb@gAd@eAj@aAn@{@t@w@v@o@|@i@~@c@bA]dAUhAMjACjABjALlAXhA`@hAj@fAn@bAx@`A`A|@fAz@jAv@rAr@xAp@|An@`Bj@dBf@hBjAxE`A~EZpBXpBh@~E^xEXrEv@fOZtHZdLVjODxH?vHMjOYpPOhFe@tMs@vMsApQ_BnQ_E|_@{AnQa@tF[|Fc@pK_@zPUvZWjYQfPUzKY~K]`LcCbo@[tGm@~KgAhPgHfcAiDjd@{@jKuAvOeAnKwBpSs@hGw@jG{@fGaBhKeCfOgBbKyEjW_FtV{CpNyBtJaLve@g@zBeA`G]`Co@dGc@hGMbCGdC?lGLnGJfC`@nGh@nGr@lG|@jGhAjGrAfGzA~FdBrFv@tBpBdFtBzE~BlElIxNlGbLbAjB|B`FnBlFr@xBn@|BtAdGtF~W~DtSjBhKfBhKdCnO`ExWxBtOtHjl@rDb\\xB|SnJhcAjAfLtA~KzAvKbAhGjA`Gf@|BvAtFzAlFp@rBfB~ElBzEhKxVtBxExBtE~D`IfEzHrKdRbCpE|@jBvB|Ev@pBt@rBdBhF|V~z@tItZjCxJdC|JxE~RlKzb@lDhOrEjSdEnSzBbKxAvF~AjFdB`FfBzElGdPnBzE|M~ZfU~i@vOr^f_@v}@jVjk@rKpWxIdSjDfIhFfMdFzM~E|MzHrT~J~XrItVpMp^`HdR~IzUjH~QtDdJvDbJrLtX`Ufg@nKlTpVxe@hRj_@jGlM~@rBx@xBv@xBp@~Bl@bCf@dC`@hC\\jCjAdLdGjj@rCzXdFfe@nAvK~Dp\\dGdi@zGzk@|H~o@~Fjd@z@jG^`Cb@|Bh@zBj@vBp@tBv@rBx@jB~@jB`AbBbA~AhAzAhAtAlApA|C~ClAjApAfApA~@tAx@vAp@vAf@xA^xATxAL|ABxACxAMvAWtA_@tAg@pAo@jAw@jA{@fAcAbAiA|@mAz@sAt@wAp@{Al@}Ah@aBd@eB`@gB\\gBZkBVkB`@}EHmBL{E?}EEkBYuEOiBUgBWeB]cBa@aBe@_Bg@}Ao@yAo@uAu@qAy@iAyBoCwDiEqBmCu@mA}AgDk@yAkA}D_@eB]kBYkBUoBQmBw@aPg@_I]qEa@qEi@qEUiBu@sEcBwHgAmEe@cB}BcH{A_E_BwDq@yAkBgDsBaDwByCgPsTyBiDuBqD_KcSgBuDaB{D}A_EyHoT}A{Dq@{AgBoDoBeDwB{C}DaFkOwPaIsJy_@uf@{MoQ}@eA}@}@aA{@cAs@cAo@iAk@kAc@mA]oAWqAOsAKuAEuA?uADuAJuARsAXsA`@sAf@sAn@oAt@oAz@oA`AmAfAkAnAiArAeAxAcA|AaAbB_AfB{@lBy@pBu@rBq@xBk@zBi@|Bc@~BaAdGWdCg@nGMjCInCCnCBnCDpCLpCNpCTpC\\jC`@hCd@hCl@bCn@`Cr@zBx@xB|@pB~@lBbAfBzRvZnNbU`JbOtN`U`OzU~PbZxNnVbN~UpT~^xMfUvOrXhKzRdCpEdAbBfA~AjAxAjAtApAnApAfArA`AvAz@tAr@xAn@zAh@zAb@zA\\zAX|AR|ANzAJzAD|AAzAGxAKxASvAYtAa@tAe@pAm@pAq@lAw@hA{@fAaAdAeAbAiA~@oAz@qAv@yAp@}AxAcEf@eBb@iB\\iBXmBToBPqBHsBDqB@sBCsBIsBKqBa@cFm@{E]iB}@kEgAcEqAuDk@uA_BgDoJ_Qu@uAgBsDcB}DmCcHyAgE}BiHyHuXuQgl@uDuK}AcE_ByDgBsDu@uAw@qAuB}CoN{QyVk[}DgFqLePwBaDy@uAkBuDcB{Dm@cBmAkEc@gB}@uEu@{EuCuS[mB]mB_@iBe@gBk@eBm@aBcBqDkBcDkDeFmD{E{BgCaA}@eAy@eAq@gAm@iAg@mA_@mAYqASqAOqAIsACsA@uAFuALsARuAXsA^qAd@oAl@oAp@kAx@iA|@gA`AeAhAeAlAaApA_AxA{@~Ay@bBw@dBs@jBq@nBwAnFg@xBa@~B_@`Co@dGQfCOjCStGElC@jCBjCVzGPjCThCXfC\\bCb@~Bd@~Bj@zBl@vBr@xBt@rBz@nB~@lBbAhBtRx[pTp_@pIvNtInNbUl^~Uj^nCpEjCrEnCjEvCxDnAvAdIdI|CdDvCjDpCpDhC|DzQzZlC~DjAvAnApAnAnApAhAtA`AtA|@vAt@xAn@zAh@zAd@zA\\|AV|AP|AJ|AB|A?|AGzAMzAQxAUxA[vA_@vAg@tAk@pAs@~CsBlA}@jAcAfAgAdAmAfCeDz@wAx@yAfB}Dl@cBh@cBd@iBdAsE~@wEz@{EVmBRqBLsBFsB?uBGsBMsBWoB_@kBg@eBo@cBs@yA{@qAaAiAgA_AsCyBmCeCiCkCiCqCeEcF{H}J}BoCsNeP}BeCcGcGcEsEeKmM}HqJiFeHkByCeB{C_BcD}AkDaCkGsAsDkAuDgAsDiAoDoAaDm@kAcBoCgDoEcDuEcMoRkE}FmI}JmBkCiBqCaBwCyA{CuA{CoEgKwAwCoCcFs@kAkBsCy@eA}@aA}@_AaAy@cAs@eAk@gAc@iA_@mAUkAOkAGmA?kADkALiATgAZiA^gAf@gAn@eAt@cAz@cA`AeCnCaApA}@rA{@zAw@|Aw@dBq@hBm@nBg@rBe@vB_@vBYzBW|BQ~BK`CIbCEdCAdCBdCHfCNhCTdCVfC\\dCb@bCf@~Bn@|Br@vBv@tB|@nB`AhB`NxUxc@nu@`H~KxL`RzP~V`MrQrChEnCjExM|T|F`KzFtJbCxDfAvAhAtAlAlApAfAvA|@vAt@vAl@xAf@xA^xAXxARxAJvABvA?vAItAKvASvAYtA_@rAe@pAk@lAq@lAw@hA{@bAaA~@eAz@gAx@kAp@qAvAmDb@{A^}AVaBRcBLeBFeBBgBAgBIiBMgBSiBUeB_@eBeAaEg@{AuAoDyAeDo@mAcBsC}JyNaDeFiB_Do@qA_BmDyAuDsAyDeHoTqAgEsCsKkAcEyAuDq@uAoBaDcHwKuB_DuI_MeDeFeDoFmGuKeGwJaBwCwFmKkB{C}EuHiByCeE_I_OaXeDwFsBaD_AiAaA_AgAw@iAm@kAg@mA]oAUoAMqAGoA@qAHqARoAZqA`@oAh@qAl@oAv@mA|@mAdAiAjAkApAeApAcAvA_AzA{@~AmBfEq@fBi@jBg@nBa@rB]tB[xBUxBQ|BO~BK`COfGCdC@pGPvGLjCRhCThCXbCv@`GpDlVjA~Jl@dG`CvWdBdTjD~`@fAtKpAdKtAbK`A|Fb@|Bf@xBj@tBn@rBt@nBnBvElFhLz@lBv@pBr@tBp@vBj@~Bf@bC^dCZfCPhCJhCBjCCjCIfCOfCaDle@}Ctg@e@lG}@`Lm@xG}Ete@aC~SeAzKc@pGm@tKy@vOe@pK_@tKYbPMpTA`LIpGU~KwArf@QvGChCAhCDhCJdCrAtONdCFhC@hCEhCIfCq@xKiArOmArOQhCIhCCnCDnCPlCZhCd@bCr@|Bz@tBfAhBpA`BvApA~A`AbBp@nHfBdKnCtG`BrDx@bJjBfGfApUvDxDr@zA`@zAf@xAl@vAt@tA|@rAdArAlAnApAjAvAtC|DlClEhI|O`AbBbAzAdAvAnC`DrCzClHpHvCfDhAxAdA~AbAdB~@lBz@rBt@xBp@zBj@`Cd@bC^dCZhCTfCRfCLfCHdCDbC@dCAbC]hO?`CJtO@pGMxb@IvKSfOCbG@`CDbCLbCP`CV`C\\zBd@xBh@rBl@lBr@hBv@bBz@zA~@tAdAjAfAdAjAz@lAr@nAh@rA`@pAVrALpADnAElAMlAWjA]fAe@dAk@`Aw@~@}@z@cAt@kAn@qAj@wAd@yA`@}A\\}Al@cEt@iHh@eHb@iHToHZiOp@uUDkECcBGaBO_BU}A_@{Ag@uAi@sAs@mAeDuFiBkDq@yAgCoGyAgDoG_NuCkFcD_FiFcH{BoC}BkC_A_AeCwBmG_FoKaIcEiD_A{@{B}By@cAw@gAgB}Cq@sAiCeGk@yAcDcK}B{G_CkGeCcGcHqNeEaJuCwGgBsDaDaGcImNgDkFsLsPgI}LgCoDiCiD_SqVoCsDmCyDeAcBeCqEmOg[iEkIsGoL{GaLoGaLkEoHkCcEyEyGeFuGwMcPuCqDsEoGeC{D}DmH{D}HyBuEiHwOoFcL}BmEcCgEiCyD_JmM_HoJgHoJwE_HeC}D_E{GuHyM{FwKaAeBeAaBgA}AuCqDeFaGmHcIeAuAcAwA{BuDsBsDyCcGaHsNcBwCsC{EeTk\\iJqOuFuIyHcMsIsMeDuFsDcGuU__@}G}KsN}VsKuRsDoGuAiCeDaHoAuC{BiFuFeN}BmFaGgMwAqCyAkCcIaNwJsQyHcO{H}OoIcPmCkFyAaDqAgDg@yAa@{A]aBYiBSkBOoBGqBAuBBuBHsBNqBj@eFZqB`@qBd@mBj@mBl@kBt@gBv@cB|@_BnQsWbKmOrBsDv@_BbBeEj@eBh@gBrDcPnA}EfD_Mf@oBb@sB^uBXuBd@qFZmFHyBJqFAwFE{BUyFs@}NiBwZq@gN_AsUo@wYWya@QkJu@{Xm@{Qw@wYeAcZuAkYmAcY}Ao\\eBcYw@kNkBk^{@kNu@_Nu@{QqAo^cA}^o@yY_D{{@WiJ}Aat@aAg_@Q{JMuNIyFi@uUs@sXqAae@aA{`@o@_UyAa_@c@yIkCef@cByXcCkd@m@wMaAeXm@eXa@qMWeFYaFsAmPKqBOgF?uB@sBHuBLuBPsBVsBZqBvBgMlAyIrEe_@jB}MhAkJbGkd@bBoNtAkNx@iJ\\qF\\mJNuFd@_VLaND_N@iNLwYH{a@HaKn@qa@r@m\\lAwe@l@i^VcXPe\\Rgk@NyXPsQHmNZaZb@_[XwNR}NTiO`@_Sv@c^v@ka@NcN@oFCkFMkF[cFSoBWkB]gBa@eBg@aBi@}Ao@yAs@wAu@qA{@mA}@eAaAcAaA}@eAy@iAq@iAk@mAe@kAa@mA[oAU_Dc@sFe@oNw@mIo@w[_DyFm@wFu@{KcBaDk@_Dq@mAY}Cw@}OsEkAYmAQoAMmAImAAoABoAHoANmAVmA\\kAd@kAl@iAt@eA|@cAdA_AlA{@tAw@zAu@`Bq@dBm@hBg@lBiAlF_BlJ{@rFoAdJqBlQqEtf@a@hFMtBGxBAxBBvBHxBNvBTvBXtBb@nBd@lBl@fBt@`Bx@zA~@rAbAlAdAbAhA|@hAv@xC|A|CrAlFpBbDfAdD`ArAZrAVrARvAJtABvAArAIrAOnAWnA_@hAi@fAs@`A{@z@gAp@mAh@uA`@_BZ_BTaBNgBFgBLkLHiBZqEvAqNZsDn@yRv@qMv@sPt@iMx@yLfAqR~@oMlBiZB{@Gk@GOIKi@]GYBuAVuFG[KICIGa@PSHAJHDV")});
+track1.setMap(map);google.maps.event.addListener(track1,'click',makeLatLonInfo("<b>Track span</b><br/><b>#1# </b>04-SEP-15 18:32:50<br/><b>#4702# </b>04-SEP-15 19:51:11"));
+clickStr+= "04-SEP-15 18:32:50<input type=\"checkbox\"onClick=\"trackClick(track0,this.checked);trackClick(track1,this.checked);\" checked/>";
+clickString();
+google.maps.event.addListener(map,'click',latlonFunc());
+function initial() { map.setCenter(new google.maps.LatLng(45.65892918574576,-73.86566086898614));
+var mapDim = document.getElementById('map').getBoundingClientRect();
+ map.setZoom(
+getBoundsZoomLevel(new google.maps.LatLngBounds(new google.maps.LatLng(45.58210517447949,-74.16666537609277),new google.maps.LatLng(45.735753197012045,-73.56465636187951))
+,mapDim)
+);
+};
+ setFooter();
+ initial();
+
+//]]>
+</script>
+ </div>
+</body>
+</html>
